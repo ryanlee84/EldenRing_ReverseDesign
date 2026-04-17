@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rykard, Lord of Blasphemy (모독의 군주 라이커드)</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --muted: #5c6570;
+    --border: #e1e4e8;
+    --accent: #2563eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 15px;
+  }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  h1 { font-size: 1.85rem; margin: 0 0 0.75rem; }
+  p { margin: 0.55rem 0; }
+  .boss { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 22px; }
+  .boss a { color: var(--accent); }
+  .boss-grid { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  .boss-img { flex: 0 0 auto; }
+  .boss-img img { max-width: 200px; height: auto; border-radius: 8px; }
+  .boss-body { flex: 1 1 320px; min-width: 0; }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  table.data th, table.data td {
+    border-bottom: 1px solid var(--border);
+    padding: 7px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.data th {
+    background: #f0f4ff;
+    font-weight: 600;
+  }
+  table.data tr:last-child td, table.data tr:last-child th { border-bottom: none; }
+  table.boss-overview { margin-top: 0; font-size: 0.9rem; }
+  table.boss-overview th {
+    width: 9.5rem;
+    white-space: nowrap;
+    vertical-align: top;
+  }
+  .wiki-src { font-size: 0.85rem; color: var(--muted); margin-top: 12px; }
+  p.skill-note { font-size: 0.88rem; color: var(--muted); margin: 0.75rem 0 0; line-height: 1.55; max-width: 52rem; }
+  .map-link { margin: 6px 0 0; }
+  .map-link a { color: var(--accent); }
+
+  .layout { display: flex; min-height: 100vh; align-items: flex-start; }
+  .sidebar {
+    flex: 0 0 min(320px, 38vw);
+    min-width: 260px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 20px 16px;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+  .sidebar nav { display: flex; flex-direction: column; gap: 4px; }
+  .nav-item {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid transparent;
+  }
+  .nav-item:hover { background: #eef2ff; border-color: var(--border); }
+  .nav-item.active { background: #e0e7ff; color: var(--accent); border-color: #c7d2fe; }
+  .content-main { flex: 1; min-width: 0; width: 100%; }
+
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar" aria-label="Boss page list">
+<p class="sidebar-title">Boss pages</p>
+<nav>
+  <a href="npc_3286_3335_Azula_Beastman.html" class="nav-item">파름 아즈라의 수인</a>
+  <a href="npc_4093_4134_Burial_Watchdog.html" class="nav-item">환수의 파수견</a>
+  <a href="npc_1768_1869_Crystalian.html" class="nav-item">아인 두목 형제</a>
+  <a href="npc_940_1001_Crucible_Knight.html" class="nav-item">도가니의 기사</a>
+  <a href="npc_2094_2115_Leonine_Misbegotten.html" class="nav-item">사자 혼종</a>
+  <a href="npc_3336_3378_Royal_Rider.html" class="nav-item">친위기사 로레타</a>
+  <a href="npc_1318_1351_Elemer_of_the_Briar.html" class="nav-item">철가시 엘레메르</a>
+  <a href="npc_5761_5819_Dragonlord_Placidusax.html" class="nav-item">용왕 플라키두삭스</a>
+  <a href="npc_1149_1196_Commander.html" class="nav-item">노장 니아르</a>
+  <a href="npc_1553_1607_Tree_Sentinel.html" class="nav-item">트리 가드</a>
+  <a href="npc_6601_6640_Ancestor_Spirit.html" class="nav-item">선조령</a>
+  <a href="npc_2274_2336_Godskin_Apostle.html" class="nav-item">신의 살갗의 사도</a>
+  <a href="npc_5700_5760_Ancient_Dragon.html" class="nav-item">사룡 포르삭스</a>
+  <a href="npc_505_670_Morgott.html" class="nav-item">끔찍한 흉조 멀기트</a>
+  <a href="npc_7165_7229_Godrick_the_Grafted.html" class="nav-item">접목의 고드릭</a>
+  <a href="npc_1443_1463_Red_Wolf_of_Radagon.html" class="nav-item">라다곤의 붉은 늑대</a>
+  <a href="rennala_294-318.html" class="nav-item">만월의 여왕 레날라</a>
+  <a href="npc_6969_7164_Starscourge_Radahn.html" class="nav-item">별 부수는 라단</a>
+  <a href="npc_7230_7325_Fire_Giant.html" class="nav-item">불의 거인</a>
+  <a href="npc_362_423_Beast_Clergyman.html" class="nav-item">흑검 말리케스</a>
+  <a href="npc_6904_6968_Hoarah_Loux.html" class="nav-item">전사 호라 루</a>
+  <a href="npc_781_841_Radagon.html" class="nav-item">황금률 라다곤</a>
+  <a href="rykard_placeholder.html" class="nav-item active">모독의 군주 라이커드</a>
+  <a href="npc_505_670_Morgott.html" class="nav-item">엘데의 왕 모르고트</a>
+  <a href="npc_7458_7521_Mohg.html" class="nav-item">피의 군주 모그</a>
+  <a href="npc_424_504_Malenia.html" class="nav-item">미켈라의 칼날 말레니아</a>
+</nav>
+</aside>
+  <div class="content-main">
+<main>
+  <h1>Rykard, Lord of Blasphemy (모독의 군주 라이커드)</h1>
+
+  <section class="boss">
+    <div class="boss-grid">
+      <div class="boss-img"><img src="rykard_placeholder_boss_wiki.jpg" width="200" alt="Rykard, Lord of Blasphemy (모독의 군주 라이커드)" /></div>
+      <div class="boss-body">
+        <table class="data boss-overview">
+          <tbody>
+
+            <tr><th>개요</th><td><strong>신을 삼키는 거신(God-Devouring Serpent)</strong>과 본체 <strong>모독의 군주 라이커드</strong>로 이어지는 <strong>2페이즈</strong> 데미갓 보스. 겔미르의 <strong>화산관(Volcano Manor)</strong> 최심부, 관객석이 있는 전장에서 조우한다. 거신과 합일을 택한 라이커드의 설정·대룬은 위키 로어를 본다. <strong>선택 보스</strong>이나 샤드베어러(대룬) 보스로 카운트되며, 레이든델 진입에 필요한 샤드베어러 두 명 중 한 명으로 잡을 수 있다(진행 방식에 따라 타니스 루트 등과 상호작용).</td></tr>
+            <tr><th>위치</th><td><strong>Mt. Gelmir</strong> — 화산관 끝 웨이게이트 또는 타니스 계약·대화 분기 후 <strong>Audience Pathway</strong>(관객의 통로) 은혜로 이동. 안개 문 너머 전장. 입장 직후 왼쪽에서 <strong>뱀사냥꾼(Serpent-Hunter)</strong> 무기를 집어 전투에 쓴다.</td></tr>
+            <tr><th>체력 (NG)</th><td>위키 기준 <strong>1페이즈(거신) HP 30,493</strong>, <strong>2페이즈(라이커드) HP 59,174</strong>, 방어력 115. NG+ 이후·패치는 위키 표 참고.</td></tr>
+            <tr><th>면역</th><td><strong>광기(Madness) 면역</strong>. 독·부패·출혈·동상·수면 등은 위키 <em>Resistance</em> 수치.</td></tr>
+            <tr><th>약점</th><td>두 페이즈 <em>Negation</em> 동일(위키): 표준·베기·관통 10, 타격 35, 마법·신성 40, <strong>화염 80</strong>, 벼락 20 등 — 숫자가 클수록 해당 속성이 더 막힘. 약점 부위는 <strong>머리</strong>. 태세 120, 패리 불가·치명타는 제한적. 상세 패턴·세팅은 위키 공략.</td></tr>
+    
+          </tbody>
+        </table>
+        <p class="wiki-src"><a href="https://eldenring.wiki.fextralife.com/Rykard,+Lord+of+Blasphemy" target="_blank" rel="noopener">Fextralife 위키 원문</a> 전투·맵·면역/약점 수치를 우선으로 하여 요약함.</p>
+        <p class="skill-note"><code>atkparam_npc.csv</code>에 Rykard 전용 <code>[…]</code> 구간이 없어 다른 보스 페이지와 같은 방식의 「공격별 수치」표는 자동 생성하지 않습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <p class="map-link"><a href="https://eldenring.wiki.fextralife.com/Interactive+Map?id=4104&code=mapA" target="_blank" rel="noopener">인터랙티브 맵</a></p>
+</main>
+  </div>
+</div>
+</body>
+</html>

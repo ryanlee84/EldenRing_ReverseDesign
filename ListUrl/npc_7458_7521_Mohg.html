@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mohg (피의 군주 모그)</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --muted: #5c6570;
+    --border: #e1e4e8;
+    --accent: #2563eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 15px;
+  }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  h1 { font-size: 1.85rem; margin: 0 0 0.75rem; }
+  h2 { font-size: 1.15rem; margin: 2rem 0 0.65rem; border-bottom: 2px solid var(--border); padding-bottom: 0.35rem; }
+  p { margin: 0.55rem 0; }
+  .boss { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 22px; }
+  .boss h2 { margin-top: 0; border: none; }
+  .boss-grid { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  .boss-img { flex: 0 0 auto; }
+  .boss-img img { max-width: 200px; height: auto; border-radius: 8px; }
+  .boss-body { flex: 1 1 320px; min-width: 0; }
+  table.boss-overview { margin-top: 0; font-size: 0.9rem; }
+  table.boss-overview th {
+    width: 9.5rem;
+    white-space: nowrap;
+    vertical-align: top;
+  }
+  .wiki-src { font-size: 0.85rem; color: var(--muted); margin-top: 12px; }
+  h2.with-gloss {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+  }
+  h2.with-gloss .gloss-inline { margin: 0; font-size: 0.9rem; font-weight: 500; }
+  h2.with-gloss .gloss-inline a { color: var(--accent); }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  table.data th, table.data td {
+    border-bottom: 1px solid var(--border);
+    padding: 7px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.data th {
+    background: #f0f4ff;
+    font-weight: 600;
+  }
+  table.data tr:last-child td, table.data tr:last-child th { border-bottom: none; }
+  table.atk-params { font-size: 0.7rem; }
+  td.atk-ix {
+    text-align: right;
+    width: 2.75rem;
+    font-variant-numeric: tabular-nums;
+    background: #f3f5f9;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  table.atk-params th.atk-name,
+  table.atk-params th.atk-name-h {
+    white-space: nowrap;
+    min-width: 13.5rem;
+    max-width: 36rem;
+    padding-left: 10px;
+    padding-right: 12px;
+  }
+  strong.dmg-coef-nz { color: #c62828; font-weight: 700; }
+  figure.chart {
+    margin: 1rem 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+  }
+  figure.chart img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  p.chart-note { font-size: 0.88rem; color: var(--muted); margin: 0.35rem 0 0; max-width: 52rem; }
+  p.skill-note { font-size: 0.88rem; color: var(--muted); margin: 0.75rem 0 0; line-height: 1.55; max-width: 52rem; }
+  .map-link { margin: 6px 0 0; }
+  .map-link a { color: var(--accent); }
+
+  .layout { display: flex; min-height: 100vh; align-items: flex-start; }
+  .sidebar {
+    flex: 0 0 min(320px, 38vw);
+    min-width: 260px;
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 20px 16px;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 0 0 14px;
+  }
+  .sidebar nav { display: flex; flex-direction: column; gap: 4px; }
+  .nav-item {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid transparent;
+  }
+  .nav-item:hover { background: #eef2ff; border-color: var(--border); }
+  .nav-item.active { background: #e0e7ff; color: var(--accent); border-color: #c7d2fe; }
+  .content-main { flex: 1; min-width: 0; width: 100%; }
+
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar" aria-label="Boss page list">
+<p class="sidebar-title">Boss pages</p>
+<nav>
+  <a href="npc_3286_3335_Azula_Beastman.html" class="nav-item">파름 아즈라의 수인</a>
+  <a href="npc_4093_4134_Burial_Watchdog.html" class="nav-item">환수의 파수견</a>
+  <a href="npc_1768_1869_Crystalian.html" class="nav-item">아인 두목 형제</a>
+  <a href="npc_940_1001_Crucible_Knight.html" class="nav-item">도가니의 기사</a>
+  <a href="npc_2094_2115_Leonine_Misbegotten.html" class="nav-item">사자 혼종</a>
+  <a href="npc_3336_3378_Royal_Rider.html" class="nav-item">친위기사 로레타</a>
+  <a href="npc_1318_1351_Elemer_of_the_Briar.html" class="nav-item">철가시 엘레메르</a>
+  <a href="npc_5761_5819_Dragonlord_Placidusax.html" class="nav-item">용왕 플라키두삭스</a>
+  <a href="npc_1149_1196_Commander.html" class="nav-item">노장 니아르</a>
+  <a href="npc_1553_1607_Tree_Sentinel.html" class="nav-item">트리 가드</a>
+  <a href="npc_6601_6640_Ancestor_Spirit.html" class="nav-item">선조령</a>
+  <a href="npc_2274_2336_Godskin_Apostle.html" class="nav-item">신의 살갗의 사도</a>
+  <a href="npc_5700_5760_Ancient_Dragon.html" class="nav-item">사룡 포르삭스</a>
+  <a href="npc_505_670_Morgott.html" class="nav-item">끔찍한 흉조 멀기트</a>
+  <a href="npc_7165_7229_Godrick_the_Grafted.html" class="nav-item">접목의 고드릭</a>
+  <a href="npc_1443_1463_Red_Wolf_of_Radagon.html" class="nav-item">라다곤의 붉은 늑대</a>
+  <a href="rennala_294-318.html" class="nav-item">만월의 여왕 레날라</a>
+  <a href="npc_6969_7164_Starscourge_Radahn.html" class="nav-item">별 부수는 라단</a>
+  <a href="npc_7230_7325_Fire_Giant.html" class="nav-item">불의 거인</a>
+  <a href="npc_362_423_Beast_Clergyman.html" class="nav-item">흑검 말리케스</a>
+  <a href="npc_6904_6968_Hoarah_Loux.html" class="nav-item">전사 호라 루</a>
+  <a href="npc_781_841_Radagon.html" class="nav-item">황금률 라다곤</a>
+  <a href="rykard_placeholder.html" class="nav-item">모독의 군주 라이커드</a>
+  <a href="npc_505_670_Morgott.html" class="nav-item">엘데의 왕 모르고트</a>
+  <a href="npc_7458_7521_Mohg.html" class="nav-item active">피의 군주 모그</a>
+  <a href="npc_424_504_Malenia.html" class="nav-item">미켈라의 칼날 말레니아</a>
+</nav>
+</aside>
+  <div class="content-main">
+<main>
+  <h1>Mohg (피의 군주 모그)</h1>
+
+
+  <section class="boss">
+    <div class="boss-grid">
+      <div class="boss-img"><img src="npc_7458_7521_Mohg_boss_wiki.jpg" width="200" alt="Mohg (피의 군주 모그)" /></div>
+      <div class="boss-body">
+        <table class="data boss-overview">
+          <tbody>
+
+            <tr><th>개요</th><td>피의 왕조. 혈염·날개·지하 몽그윈 왕조로의 문 등 패턴.</td></tr>
+            <tr><th>위치</th><td>Mohgwyn Dynasty — 지하 영역.</td></tr>
+            <tr><th>체력 (NG)</th><td>위키 표.</td></tr>
+            <tr><th>면역</th><td>위키 Resistance.</td></tr>
+            <tr><th>약점</th><td>위키 Negation·출혈 대응.</td></tr>
+    
+          </tbody>
+        </table>
+        <p class="wiki-src"><a href="https://eldenring.wiki.fextralife.com/Mohg" target="_blank" rel="noopener">Fextralife 위키 원문</a>을 바탕으로 번역·요약함. 아래 「공격별 수치」는 atkparam_npc 테이블 발췌.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <p class="map-link"><a href="https://eldenring.wiki.fextralife.com/Interactive+Map?id=0&code=mapA" target="_blank" rel="noopener">인터랙티브 맵</a></p>
+
+  <h2>스킬</h2>
+  <table class="data">
+    <thead><tr><th>이름</th><th>내용</th></tr></thead>
+    <tbody>
+
+      <tr><td>혈염·창</td><td>피의 왕조 패턴. 출혈·혈연 연출.</td></tr>
+      <tr><td>날개·비행</td><td>공중·광역 행이 별도 판정으로 잡힌다.</td></tr>
+      <tr><td>왕조로의 문</td><td>특수 페이즈·컷신 연계는 위키 공략 참고.</td></tr>
+    
+    </tbody>
+  </table>
+<p class="skill-note">「스킬」 표는 <strong>위키·전투 흐름을 기준으로 정리한 요약</strong>입니다(보스별 수동 입력). 아래 「공격별 수치」는 <strong>atkparam_npc에 등록된 공격 행마다 한 줄</strong>이라 위키 기술 이름과 1:1로 맞지 않고, 히트·변형·특효 ID 차이 등으로 <strong>같은 동작도 여러 행</strong>으로 쪼개져 행 수가 많습니다.</p>
+  <h2 class="with-gloss">공격별 수치 <span class="gloss-inline"><a href="glossary_WIKI.html">용어집 WIKI</a></span></h2>
+  <div style="overflow-x:auto">
+  <table class="data atk-params">
+    <thead><tr><th class="atk-ix">#</th><th class="atk-name-h">공격 이름</th><th>밀어내기 거리</th><th>히트 스톱 시간</th><th>물리 피해 계수</th><th>마법 피해 계수</th><th>화염 피해 계수</th><th>벼락 피해 계수</th><th>스태미나 피해 계수</th><th>피해 단계</th><th>가드 시 공격력 비율</th><th>가드 붕괴율</th><th>히트0~3 구 반경</th></tr></thead>
+    <tbody>
+<tr><td class="atk-ix">1</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800000">발사체·화염/중간D0</th><td>0</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">110</strong></td><td>0</td><td><strong class="dmg-coef-nz">20</strong></td><td>0</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">2</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800020">발사체·화염/약공D0</th><td>0</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">30</strong></td><td>0</td><td>0</td><td>0</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">3</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800030">발사체·화염/약공D0</th><td>0</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">30</strong></td><td>0</td><td>0</td><td>0</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">4</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800040">발사체·화염/중간D7</th><td>1</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td><strong class="dmg-coef-nz">90</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">5</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800110">발사체·화염/중간D2</th><td>1</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td><strong class="dmg-coef-nz">20</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">6</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800125 물리 계수 중심.">물리/중공D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">7</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800135 물리 계수 중심.">물리/중공D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">8</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800145 물리 계수 중심.">물리/중공D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">9</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800160 물리 계수 중심.">물리/중공D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">10</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800170 물리 계수 중심.">물리/중공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">11</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800180 물리 계수 중심.">물리/강공D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">250</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">12</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800190 물리 계수 중심.">물리/중공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">180</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">80</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">13</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800195 물리 계수 중심.">물리/중공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">180</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">80</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">14</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800200 물리 계수 중심.">물리/중공D3</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>3</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">15</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800201 물리 계수 중심.">물리/중공D7</th><td>2</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">16</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800210">발사체·화염/중간D7</th><td>1</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td><strong class="dmg-coef-nz">20</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">17</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800220 물리 계수 중심.">물리/중공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">18</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800230 물리 계수 중심.">물리/중공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">19</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800240">발사체·화염/중간D2</th><td>1</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td><strong class="dmg-coef-nz">20</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">20</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800260">발사체·화염/중간D8</th><td>0</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>0</td><td><strong class="dmg-coef-nz">20</strong></td><td>8</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">21</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800300 물리 계수 중심.">물리/약공D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">35</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">20</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">22</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800305 물리 계수 중심.">물리/중공D10</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">180</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">100</strong></td><td>10</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">23</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800310 물리 계수 중심.">물리/강공D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">260</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">24</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800320">발사체·화염/중간D2</th><td>1</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td><strong class="dmg-coef-nz">20</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">25</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800330 물리 계수 중심.">물리/중공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">26</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800340 물리 계수 중심.">물리/중공D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">27</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800342 물리 계수 중심. 히트0~3 구 반경 중 비0 있음.">물리/중공D5</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>5</td><td>100</td><td>0</td><td><strong>2</strong>/0/0/0</td></tr>
+<tr><td class="atk-ix">28</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800345 물리 계수 중심.">물리/중공D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">29</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800350 물리 계수 중심.">물리/중공D3</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>3</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">30</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800360 물리 계수 중심.">물리/중공D3</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>3</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">31</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800370 물리 계수 중심.">스태미나/강공D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">270</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">999</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">32</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800390 물리 계수 중심.">물리/중공D9</th><td>4</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>9</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">33</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800395 물리 계수 중심.">물리/중공D6</th><td>4</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">34</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800400 물리 계수 중심.">물리/강공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">270</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">35</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800420 물리 계수 중심.">물리/강공D10</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">270</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>10</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">36</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800430">발사체·화염/중간D10</th><td>1</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td><strong class="dmg-coef-nz">20</strong></td><td>10</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">37</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800435 물리 계수 중심. 히트0~3 구 반경 중 비0 있음.">물리/중공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td><strong>1</strong>/0/0/0</td></tr>
+<tr><td class="atk-ix">38</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800440 물리 계수 중심.">물리/중공D10</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>10</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">39</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800560 물리 계수 중심.">화염/중간D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">40</strong></td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">40</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800570 물리 계수 중심.">화염/중간D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">41</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800580 물리 계수 중심.">화염/강공D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">50</strong></td><td>0</td><td><strong class="dmg-coef-nz">250</strong></td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">42</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800590 물리 계수 중심.">화염/중간D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">36</strong></td><td>0</td><td><strong class="dmg-coef-nz">180</strong></td><td>0</td><td><strong class="dmg-coef-nz">80</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">43</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800600 물리 계수 중심.">화염/중간D3</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">40</strong></td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>3</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">44</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800601 물리 계수 중심.">화염/중간D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">45</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800620 물리 계수 중심.">화염/중간D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">46</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800630 물리 계수 중심.">화염/중간D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">47</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800700 물리 계수 중심.">스태미나/중공D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">8</strong></td><td>0</td><td><strong class="dmg-coef-nz">32</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">48</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800705 물리 계수 중심.">화염/중간D10</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">40</strong></td><td>0</td><td><strong class="dmg-coef-nz">160</strong></td><td>0</td><td><strong class="dmg-coef-nz">100</strong></td><td>10</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">49</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800710 물리 계수 중심.">화염/강공D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">52</strong></td><td>0</td><td><strong class="dmg-coef-nz">260</strong></td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">50</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800740 물리 계수 중심.">화염/중간D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">51</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800742 물리 계수 중심. 히트0~3 구 반경 중 비0 있음.">물리/중공D5</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">200</strong></td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>5</td><td>100</td><td>0</td><td><strong>2</strong>/0/0/0</td></tr>
+<tr><td class="atk-ix">52</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800745 물리 계수 중심.">화염/중간D2</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>2</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">53</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800750 물리 계수 중심.">화염/중간D3</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>3</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">54</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800760 물리 계수 중심.">화염/중간D3</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>3</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">55</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800770 물리 계수 중심.">스태미나/강공D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">54</strong></td><td>0</td><td><strong class="dmg-coef-nz">270</strong></td><td>0</td><td><strong class="dmg-coef-nz">999</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">56</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800790 물리 계수 중심.">화염/중간D9</th><td>4</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>9</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">57</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800795 물리 계수 중심.">화염/강공D6</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">54</strong></td><td>0</td><td><strong class="dmg-coef-nz">270</strong></td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>6</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">58</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800800 물리 계수 중심.">화염/강공D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">54</strong></td><td>0</td><td><strong class="dmg-coef-nz">270</strong></td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>7</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">59</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800820 물리 계수 중심.">화염/강공D10</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">54</strong></td><td>0</td><td><strong class="dmg-coef-nz">270</strong></td><td>0</td><td><strong class="dmg-coef-nz">170</strong></td><td>10</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">60</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800835 물리 계수 중심. 히트0~3 구 반경 중 비0 있음.">화염/중간D7</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>7</td><td>100</td><td>0</td><td><strong>1</strong>/0/0/0</td></tr>
+<tr><td class="atk-ix">61</td><th class="atk-name" title="rowname: [Mohg] 내부 식별 rowid 4800840 물리 계수 중심.">화염/중간D10</th><td>1</td><td>0</td><td><strong class="dmg-coef-nz">46</strong></td><td>0</td><td><strong class="dmg-coef-nz">230</strong></td><td>0</td><td><strong class="dmg-coef-nz">120</strong></td><td>10</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+<tr><td class="atk-ix">62</td><th class="atk-name" title="rowname: [Mohg] 발사체 내부 식별 rowid 4800900">발사체·스태미나/강공D4</th><td>1</td><td>0</td><td>0</td><td>0</td><td><strong class="dmg-coef-nz">300</strong></td><td>0</td><td><strong class="dmg-coef-nz">999</strong></td><td>4</td><td>100</td><td>0</td><td>0/0/0/0</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>그래프</h2>
+  <figure class="chart">
+    <img src="npc_7458_7521_Mohg_atkcoef.png" alt="물리·마법·화염·벼락·스태미나 피해 계수" />
+  </figure>
+
+</main>
+  </div>
+</div>
+
+<script>
+(function () {
+  var KEY = "elden-boss-nav-sidebar-scroll";
+  var aside = document.querySelector(".sidebar");
+  if (!aside) return;
+
+  function hrefWithNavsb(href, sb) {
+    var hashIdx = href.indexOf("#");
+    var hash = hashIdx >= 0 ? href.slice(hashIdx) : "";
+    var base = hashIdx >= 0 ? href.slice(0, hashIdx) : href;
+    var sep = base.indexOf("?") >= 0 ? "&" : "?";
+    return base + sep + "navsb=" + String(sb) + hash;
+  }
+
+  aside.addEventListener("click", function (e) {
+    var a = e.target.closest("a.nav-item");
+    if (!a || a.getAttribute("target") === "_blank") return;
+    if (e.button !== 0) return;
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+    var href = a.getAttribute("href");
+    if (!href) return;
+    e.preventDefault();
+    var sb = aside.scrollTop;
+    try {
+      sessionStorage.setItem(KEY, String(sb));
+    } catch (err) {}
+    location.href = hrefWithNavsb(href, sb);
+  });
+
+  function restore() {
+    var n = null;
+    try {
+      var u = new URL(window.location.href);
+      var p = u.searchParams.get("navsb");
+      if (p !== null) {
+        n = parseInt(p, 10) || 0;
+        u.searchParams.delete("navsb");
+        history.replaceState(null, "", u.toString());
+      }
+    } catch (err) {}
+    if (n === null) {
+      try {
+        var y = sessionStorage.getItem(KEY);
+        if (y != null) n = parseInt(y, 10) || 0;
+      } catch (err2) {}
+    }
+    if (n === null) return;
+    aside.scrollTop = n;
+    requestAnimationFrame(function () {
+      aside.scrollTop = n;
+      requestAnimationFrame(function () {
+        aside.scrollTop = n;
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", restore);
+  } else {
+    restore();
+  }
+  window.addEventListener("pageshow", function (ev) {
+    if (ev.persisted) restore();
+  });
+})();
+</script>
+
+</body>
+</html>

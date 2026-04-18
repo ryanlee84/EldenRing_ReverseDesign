@@ -1,0 +1,154 @@
+:root {
+  --bg: #1a1d23;
+  --fg: #e8eaed;
+  --muted: #9aa0a6;
+  --accent: #5c9ded;
+  --border: #3c424c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  margin: 0;
+  padding: 1.5rem;
+  line-height: 1.5;
+}
+
+header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.35rem;
+}
+
+.sub {
+  color: var(--muted);
+  max-width: 52rem;
+  margin: 0 0 1.5rem;
+}
+
+.sub code {
+  background: #2a2f38;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.sub.hint {
+  font-size: 0.9rem;
+}
+
+.field-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem;
+}
+
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+legend {
+  padding: 0 0.35rem;
+  color: var(--accent);
+}
+
+label {
+  display: block;
+  margin: 0.4rem 0;
+}
+
+input[type="text"] {
+  background: #252a33;
+  border: 1px solid var(--border);
+  color: var(--fg);
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+}
+
+button {
+  background: var(--accent);
+  color: #0d1117;
+  border: none;
+  padding: 0.55rem 1.1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.08);
+}
+
+.status {
+  min-height: 1.5rem;
+  color: var(--muted);
+}
+
+.status.error {
+  color: #f88;
+}
+
+.hidden {
+  display: none;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.toolbar button {
+  background: #3d4553;
+  color: var(--fg);
+  font-weight: 500;
+}
+
+#table-wrap {
+  overflow: auto;
+  max-height: 60vh;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+th,
+td {
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+}
+
+th {
+  background: #252a33;
+  position: sticky;
+  top: 0;
+}
+
+pre#md-raw {
+  background: #252a33;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 40vh;
+  font-size: 0.8rem;
+}
+
+details summary {
+  cursor: pointer;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}

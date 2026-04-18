@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "boss": "Tree Sentinel",
+  "chrId": "c3251",
+  "sourceNote": "Smithbox/별도 TAE 덤프 도구에서 채운 뒤 --merge-tae 로 병합. 아래 이벤트는 형식 예시(플레이스홀더)입니다.",
+  "animations": [
+    {
+      "name": "Attack_Example",
+      "events": [
+        {
+          "frameStart": 12,
+          "frameEnd": 14,
+          "kind": "Hit",
+          "rowid": "3251100",
+          "note": "AtkParam rowid와 짝을 맞출 때 사용"
+        },
+        {
+          "frameStart": 0,
+          "frameEnd": 5,
+          "kind": "Windup",
+          "rowid": null,
+          "note": "선딜 구간 예시"
+        }
+      ]
+    }
+  ],
+  "byRowid": {
+    "3251100": [
+      {
+        "anim": "Attack_Example",
+        "frameStart": 12,
+        "frameEnd": 14,
+        "kind": "Hit"
+      }
+    ]
+  }
+}

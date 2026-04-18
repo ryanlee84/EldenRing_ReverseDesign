@@ -1,0 +1,439 @@
+/* Enemy Reference Guide — light doc layout (§4 Document.md) */
+:root {
+  --page-bg: #e8eaed;
+  --card-bg: #fff;
+  --text: #1a1d21;
+  --muted: #5f6368;
+  --border: #dadce0;
+  --accent: #1a73e8;
+  --accent-soft: #e8f0fe;
+  --pill-pattern: #f1f3f4;
+  --pill-coverage: #e6f4ea;
+  --pill-coverage-text: #137333;
+  --summary-bar: #f8f9fa;
+  --shadow: 0 1px 3px rgba(60, 64, 67, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: var(--page-bg);
+  color: var(--text);
+  line-height: 1.55;
+  min-height: 100vh;
+}
+
+.site-nav {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: 0.9rem;
+}
+.site-nav a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+.site-nav a:hover {
+  text-decoration: underline;
+}
+.site-nav span {
+  color: var(--muted);
+}
+
+.doc-header {
+  text-align: center;
+  padding: 1.5rem 1rem 2rem;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+.doc-header h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  font-weight: 800;
+}
+.doc-header .sub {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.stages-wrap {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+.stage-block {
+  margin-bottom: 2rem;
+}
+
+.stage-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.stage-num {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1rem;
+  color: #fff;
+}
+.stage-num.theme-green {
+  background: #2e7d32;
+}
+.stage-num.theme-blue {
+  background: #1565c0;
+}
+.stage-num.theme-orange {
+  background: #e65100;
+}
+.stage-num.theme-gray {
+  background: #5f6368;
+}
+
+.stage-titles {
+  flex: 1;
+  min-width: 0;
+}
+.stage-titles h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+.phase-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2em 0.55em;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.phase-badge.orange {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.stage-summary {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.stage-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.pill-stage {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  border-radius: 999px;
+  background: #e3f2fd;
+  color: #1565c0;
+  font-weight: 600;
+}
+
+.enemy-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+details.enemy-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+details.enemy-card > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+details.enemy-card > summary::-webkit-details-marker {
+  display: none;
+}
+.enemy-card .summary-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.enemy-card .name-en {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.enemy-card .chev {
+  flex-shrink: 0;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 0.65rem;
+}
+details.enemy-card[open] .chev::before {
+  content: "▼";
+}
+details.enemy-card:not([open]) .chev::before {
+  content: "▶";
+}
+
+.priority-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.25em 0.5em;
+  border-radius: 4px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.card-body {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4em 0.85em;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: #fff;
+}
+.link-btn:hover {
+  background: var(--accent-soft);
+}
+
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 1rem 0 0.35rem;
+}
+.section-label:first-child {
+  margin-top: 0.25rem;
+}
+
+.reason-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+.pill-pattern {
+  font-size: 0.75rem;
+  padding: 0.35em 0.6em;
+  border-radius: 999px;
+  background: var(--pill-pattern);
+  color: #3c4043;
+  font-weight: 600;
+}
+.pill-coverage {
+  font-size: 0.75rem;
+  padding: 0.35em 0.6em;
+  border-radius: 999px;
+  background: var(--pill-coverage);
+  color: var(--pill-coverage-text);
+  font-weight: 600;
+}
+
+.summary-box {
+  margin-top: 1rem;
+  padding: 0.75rem 0.85rem;
+  background: var(--summary-bar);
+  border-left: 4px solid #bdc1c6;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+/* —— Editor (dark, aligns with combat_doc) —— */
+body.editor-page {
+  background: #1a1d23;
+  color: #e8eaed;
+}
+body.editor-page .site-nav a {
+  color: #8ab4f8;
+}
+.editor-wrap {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 3rem;
+}
+.editor-wrap h1 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.editor-toolbar button,
+.editor-toolbar label.file-btn {
+  background: #5c9ded;
+  color: #0d1117;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+.editor-toolbar label.file-btn {
+  display: inline-block;
+}
+.editor-toolbar input[type="file"] {
+  display: none;
+}
+.editor-toolbar .secondary {
+  background: #3c424c;
+  color: #e8eaed;
+}
+.editor-status {
+  font-size: 0.85rem;
+  color: #9aa0a6;
+  margin: 0.5rem 0;
+}
+
+.editor-fieldset {
+  border: 1px solid #3c424c;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+}
+.editor-fieldset legend {
+  color: #8ab4f8;
+  font-weight: 700;
+}
+.editor-fieldset label {
+  display: block;
+  margin: 0.35rem 0;
+  font-size: 0.88rem;
+}
+.editor-fieldset input[type="text"],
+.editor-fieldset textarea,
+.editor-fieldset select {
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0.2rem;
+  background: #252a33;
+  border: 1px solid #3c424c;
+  color: #e8eaed;
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.editor-fieldset textarea {
+  min-height: 4.5rem;
+  resize: vertical;
+}
+.row-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.row-actions button {
+  background: #3c424c;
+  color: #e8eaed;
+  border: none;
+  padding: 0.35rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.row-actions button.danger {
+  background: #5c2b2b;
+  color: #f8d7da;
+}
+
+.stage-editor {
+  border: 1px solid #3c424c;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  background: #22262d;
+}
+.stage-editor h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  color: #fdcfe8;
+}
+
+.enemy-editor {
+  border: 1px dashed #3c424c;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  background: #1a1d23;
+}
+.enemy-editor h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  color: #c9daf8;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #9aa0a6;
+  margin: 0.25rem 0 0;
+}

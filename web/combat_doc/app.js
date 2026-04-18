@@ -150,6 +150,131 @@ function buildJsonPayload(meta, attacks, taeExtra) {
   return payload;
 }
 
+const TAE_KIND_COLORS = {
+  Hit: "#c94c4c",
+  Windup: "#5a9c6a",
+  Damage: "#c94c4c",
+  default: "#6b7a8f",
+};
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function colorForTaeKind(kind) {
+  const k = String(kind || "");
+  return TAE_KIND_COLORS[k] || TAE_KIND_COLORS.default;
+}
+
+/**
+ * 스키마 v1: tae.animations[].{ name, events: [{ frameStart, frameEnd, kind, rowid?, note? }] }
+ */
+function renderTaePreview(tae) {
+  const wrap = document.getElementById("tae-timeline-wrap");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  if (tae == null) {
+    wrap.classList.add("hidden");
+    return;
+  }
+  wrap.classList.remove("hidden");
+
+  const anims = tae.animations;
+  if (!Array.isArray(anims) || anims.length === 0) {
+    const p = document.createElement("p");
+    p.className = "tae-preview-muted";
+    p.textContent =
+      "TAE JSON은 있으나 animations[] 타임라인이 없습니다. " +
+      "스키마 v1 예시: data/tree_sentinel_tae.example.json " +
+      "(events[].frameStart / frameEnd / kind).";
+    wrap.appendChild(p);
+    return;
+  }
+
+  const h3 = document.createElement("h3");
+  h3.className = "tae-timeline-title";
+  h3.textContent = "TAE 타임라인 (미리보기)";
+  wrap.appendChild(h3);
+
+  const W = 640;
+  const H = 44;
+  const padL = 6;
+  const padR = 10;
+  const innerW = W - padL - padR;
+  const axisY = H - 10;
+  const barY = 8;
+  const barH = 16;
+
+  for (const anim of anims) {
+    const events = Array.isArray(anim.events) ? anim.events : [];
+    let maxF = 1;
+    for (const ev of events) {
+      const fs = Number(ev.frameStart) || 0;
+      const fe = Number(ev.frameEnd);
+      const end = Number.isFinite(fe) ? fe : fs;
+      maxF = Math.max(maxF, fs, end, 1);
+    }
+
+    const track = document.createElement("div");
+    track.className = "tae-track";
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "tae-track-name";
+    nameEl.textContent = anim.name || "(이름 없음)";
+    track.appendChild(nameEl);
+
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("class", "tae-svg");
+    svg.setAttribute("role", "img");
+
+    const axis = document.createElementNS(SVG_NS, "line");
+    axis.setAttribute("x1", String(padL));
+    axis.setAttribute("y1", String(axisY));
+    axis.setAttribute("x2", String(W - padR));
+    axis.setAttribute("y2", String(axisY));
+    axis.setAttribute("stroke", "#5c6570");
+    axis.setAttribute("stroke-width", "1");
+    svg.appendChild(axis);
+
+    for (const ev of events) {
+      const fs = Number(ev.frameStart) || 0;
+      const fe = Number(ev.frameEnd);
+      const end = Number.isFinite(fe) ? fe : fs;
+      const lo = Math.min(fs, end);
+      const hi = Math.max(fs, end);
+      const x1 = padL + (lo / maxF) * innerW;
+      const x2 = padL + (hi / maxF) * innerW;
+      const bw = Math.max(x2 - x1, 2);
+
+      const rect = document.createElementNS(SVG_NS, "rect");
+      rect.setAttribute("x", String(x1));
+      rect.setAttribute("width", String(bw));
+      rect.setAttribute("y", String(barY));
+      rect.setAttribute("height", String(barH));
+      rect.setAttribute("fill", colorForTaeKind(ev.kind));
+      rect.setAttribute("rx", "2");
+
+      const tip = document.createElementNS(SVG_NS, "title");
+      const parts = [String(ev.kind || "?"), `${lo}–${hi} f`];
+      if (ev.rowid != null && String(ev.rowid).length) parts.push(`rowid ${ev.rowid}`);
+      if (ev.note) parts.push(String(ev.note));
+      tip.textContent = parts.join(" · ");
+      rect.appendChild(tip);
+      svg.appendChild(rect);
+    }
+
+    const cap = document.createElementNS(SVG_NS, "text");
+    cap.setAttribute("x", String(padL));
+    cap.setAttribute("y", String(H - 1));
+    cap.setAttribute("fill", "#9aa0a6");
+    cap.setAttribute("font-size", "10");
+    cap.textContent = `0 — ${maxF} f`;
+    svg.appendChild(cap);
+
+    track.appendChild(svg);
+    wrap.appendChild(track);
+  }
+}
+
 function renderTable(attacks) {
   const wrap = document.getElementById("table-wrap");
   wrap.innerHTML = "";
@@ -186,6 +311,7 @@ function applyResult(data) {
   lastPayload = data.json;
   lastMarkdown = data.markdown || "";
   document.getElementById("md-raw").textContent = lastMarkdown;
+  renderTaePreview(data.json && data.json.tae);
   renderTable(data.json.attacks || []);
   document.getElementById("result").classList.remove("hidden");
   document.getElementById(

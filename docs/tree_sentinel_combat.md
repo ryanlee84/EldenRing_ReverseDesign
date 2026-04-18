@@ -1,6 +1,6 @@
 # 전투 문서 데이터 — Tree Sentinel
 
-- 생성: `2026-04-18T08:35:35.352193+00:00`
+- 생성: `2026-04-18T08:38:53.060806+00:00`
 - 소스 CSV: `atkparam_npc.csv`
 - 필터: 포함 `[Tree Sentinel]`
 - 제외: `Draconic`
@@ -72,6 +72,44 @@
 | 3251913 | [Tree Sentinel] Bullet | 0 | 0 | 0 | 0 | 80 | 0 | 0 | 0 | 0 | 1 | 0 | 7 | 100 | 0 | -1 | -1 | -1 | -1 | -1 | 20 | 0 | 0 |
 | 3251915 | [Tree Sentinel] Bullet | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | -1 | -1 | -1 | -1 | -1 | 0 | 0 | 0 |
 
-## TAE (프레임·이벤트)
+## TAE (외부 JSON 병합)
 
-*(비어 있음. 별도 도구로 덤프한 JSON을 `--merge-tae` 로 넘기면 이 절이 채워짐.)*
+```json
+{
+  "schemaVersion": 1,
+  "boss": "Tree Sentinel",
+  "chrId": "c3251",
+  "sourceNote": "Smithbox/별도 TAE 덤프 도구에서 채운 뒤 --merge-tae 로 병합. 아래 이벤트는 형식 예시(플레이스홀더)입니다.",
+  "animations": [
+    {
+      "name": "Attack_Example",
+      "events": [
+        {
+          "frameStart": 12,
+          "frameEnd": 14,
+          "kind": "Hit",
+          "rowid": "3251100",
+          "note": "AtkParam rowid와 짝을 맞출 때 사용"
+        },
+        {
+          "frameStart": 0,
+          "frameEnd": 5,
+          "kind": "Windup",
+          "rowid": null,
+          "note": "선딜 구간 예시"
+        }
+      ]
+    }
+  ],
+  "byRowid": {
+    "3251100": [
+      {
+        "anim": "Attack_Example",
+        "frameStart": 12,
+        "frameEnd": 14,
+        "kind": "Hit"
+      }
+    ]
+  }
+}
+```

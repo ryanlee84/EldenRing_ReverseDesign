@@ -51,6 +51,10 @@
       </fieldset>
       <fieldset>
         <legend>TAE JSON (선택)</legend>
+        <p class="field-hint">
+          <code>animations[]</code>·<code>events[]</code>의 <code>frameStart</code>/<code>frameEnd</code>/<code>kind</code>가 있으면 미리보기에 막대 타임라인(SVG)이 표시됩니다. 형식 예:
+          <code>data/tree_sentinel_tae.example.json</code>
+        </p>
         <label><input type="file" name="tae_json" accept=".json,application/json" /></label>
       </fieldset>
       <button type="submit" id="btn-submit">문서화</button>
@@ -66,6 +70,7 @@
         <button type="button" id="dl-csv">CSV 다운로드</button>
         <button type="button" id="dl-xlsx">Excel (.xlsx) 다운로드</button>
       </div>
+      <div id="tae-timeline-wrap" class="hidden" aria-label="TAE 타임라인 미리보기"></div>
       <div id="table-wrap"></div>
       <details>
         <summary>Markdown 원문</summary>

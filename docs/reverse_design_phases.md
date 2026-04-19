@@ -3,7 +3,11 @@
 **부제:** 구현·문서 공통 명세 초안  
 **한 줄 스코프:** Elden Ring 보스 1체를 기준으로 Param·TAE·웹 산출물까지 **재현 가능한 JSON/표**를 만든 뒤, AI·고급 시각화는 단계적으로 확장한다.
 
-**규격 정렬:** `Document.md` **B형(프로토타이핑 명세서)** — 상단 범례·시스템 번호·의도적 생략. 웹 카드·아코디언 매핑은 **문서 4절(웹 UI)** 과 동일 정보 단위를 유지한다.
+**웹에서 보기 (Document.md 4절 스타일):** 저장소 `web/combat_doc/reverse_design_phases.html` — GitHub Pages 배포 시  
+[https://ryanlee84.github.io/EldenRing_ReverseDesign/combat-doc/reverse_design_phases.html](https://ryanlee84.github.io/EldenRing_ReverseDesign/combat-doc/reverse_design_phases.html)  
+로컬: `web/combat_doc` 폴더에서 `python -m http.server` 후 같은 파일명으로 접속.
+
+**규격 정렬:** `Document.md` **B형(프로토타이핑 명세서)** — 표지·요약 대시보드·시스템 번호·강조 블록·의도적 생략. 웹 표현은 **문서 4절(웹 UI)** 의 단계 배지·칩·아코디언·링크 행·요약 박스 패턴에 맞춘 정적 HTML로 제공한다.
 
 ---
 
@@ -15,7 +19,7 @@
 | 기준 레퍼런스 | `Document.md`, `guide.md`, `data/tree_sentinel_tae.example.json` |
 | 기준 엔진·데이터 | Elden Ring regulation / Smithbox·Param CSV·TAE JSON 덤프 |
 
-**파라미터 타입 범례 (B형 2절·3절(4)과 동일)**
+**파라미터 타입 범례 (B형 2절 및 문서 3절 표 (4)와 동일 분류)**
 
 | 타입 | 의미 | 예시 필드 |
 |------|------|-----------|
@@ -42,7 +46,7 @@
 | 작업 | 데이터·도구 | 산출·검증 |
 |------|----------------|-----------|
 | AtkParam 등 Param CSV 필터·슬림 열 | Smithbox / regulation CSV | `combat_doc_export.py` → `data/*_combat.json`, 표·MD |
-| 자산 경로·TAE 자리 | `guide.md` 4절 전제 | `asset_inventory` 상대 힌트, `tae` 키 유무 |
+| 자산 경로·TAE 자리 | `guide.md` (Smithbox·TAE 전제) | `asset_inventory` 상대 힌트, `tae` 키 유무 |
 | 웹 미리보기 | 브라우저 + `web/combat_doc` | CSV 업로드, TAE JSON 시 SVG 타임라인(`animations[]`) |
 | A형 UI 칸 | 문서 4절 스키마 | `enemy_guide_*` — 단계·카드·링크는 **수동·소량**으로 시작 |
 
@@ -91,7 +95,7 @@
 
 ---
 
-## 초안 체크리스트 (`Document.md` 3절(7) 대응)
+## 초안 체크리스트 (`Document.md` 3절 — 초안 완료 시 체크리스트 항목 대응)
 
 - [ ] 표지 한 줄 스코프(본 문서 상단) 충족  
 - [ ] A형 웹 카드로 옮길 때 **동일 필드**를 JSON에 유지 (문서 4절 공통 스키마)  

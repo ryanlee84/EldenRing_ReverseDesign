@@ -1,0 +1,71 @@
+/* 보조: reverse_design_phases.html — enemy_guide.css 위에 로드 */
+body.rd-page .stages-wrap {
+  max-width: 56rem;
+}
+
+.rd-dashboard {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 1rem 1.15rem;
+  margin: 0 auto 1.5rem;
+  max-width: 56rem;
+}
+
+.rd-dashboard h2 {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+}
+
+.rd-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  margin: 0.5rem 0 0;
+}
+
+.rd-table th,
+.rd-table td {
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.rd-table th {
+  background: var(--summary-bar);
+  font-weight: 700;
+}
+
+.rd-table code {
+  font-size: 0.82em;
+  background: var(--pill-pattern);
+  padding: 0.08em 0.28em;
+  border-radius: 3px;
+}
+
+.callout-risk {
+  border-left-color: #e65100 !important;
+  color: var(--text) !important;
+}
+
+.callout-omit {
+  border-left-color: #78909c !important;
+}
+
+.doc-footer-rd {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: 2.5rem 1rem 1.5rem;
+}
+
+.rd-section-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin: 2rem auto 0.75rem;
+  max-width: 56rem;
+  padding: 0 1rem;
+  color: var(--text);
+}

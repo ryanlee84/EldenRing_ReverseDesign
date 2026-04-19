@@ -32,6 +32,9 @@ CURATED_BOSS_META: dict[str, dict] = {
         "page_title": "Commander Niall (노장 니아르)",
         "h1_title": "Commander Niall (노장 니아르)",
     },
+    "Morgott": {
+        "wiki_link": "https://eldenring.wiki.fextralife.com/Morgott+the+Omen+King",
+    },
 }
 
 # 개요 표 tbody 안쪽 HTML만 (드롭 행 없음). 행 제목: 면역 = 상태·면역, 약점 = 받는 피해 유리 속성·전술.

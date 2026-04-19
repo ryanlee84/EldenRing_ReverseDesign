@@ -113,7 +113,7 @@ function buildBundleMarkdownSection(entries) {
   lines.push("### 번들 등록 (자산)");
   lines.push("");
   lines.push(
-    "*(브라우저는 `anibnd`/`chrbnd`를 열지 않습니다. Smithbox·DS Anim Studio 등으로 TAE를 뽑은 뒤 위 폼의 TAE JSON을 합치면 `docs/reverse_engineering_combat_sheet.md` 2단계와 연결됩니다.)*"
+    "*(브라우저는 `anibnd`/`chrbnd`를 열지 않습니다. TAE·프레임 구간은 Smithbox·DS Anim Studio 등으로 조사한 뒤 노션에 수동으로 정리하면 `docs/reverse_engineering_combat_sheet.md` 2단계와 연결됩니다.)*"
   );
   lines.push("");
   for (const e of entries) {
@@ -206,8 +206,7 @@ function buildNotionMarkdown(opts) {
     atkHeaders,
     imageMdLine,
     bundleSection,
-    taeNote,
-    regulationNote,
+    regulationBin,
   } = opts;
 
   const lines = [];
@@ -392,7 +391,7 @@ function buildNotionMarkdown(opts) {
     }
   } else {
     lines.push(
-      "| — | *(AtkParam CSV + 필터)* | — | — | — | — |"
+      "| — | *(AtkParam CSV에 데이터 행이 없습니다)* | — | — | — | — |"
     );
   }
   lines.push("");
@@ -403,19 +402,17 @@ function buildNotionMarkdown(opts) {
 
   lines.push("### **프레임 분석**");
   lines.push("");
-  if (taeNote) {
-    lines.push(taeNote);
-  } else {
-    lines.push(
-      "[*(TAE JSON을 올리면 여기에 애니 요약이 붙습니다. `anibnd`만 등록된 경우에도 JSON 추출 전까지는 이 안내가 표시됩니다.)*](#)"
-    );
-  }
+  lines.push(
+    "*(이 페이지는 GitHub Pages에서 TAE·애니를 파싱하지 않습니다. 별도 도구로 구간을 조사한 뒤 노션에서 수동으로 보강하세요. 애니 원천은 위 「번들 등록」, Param 정본은 아래 regulation 출처를 참고하세요.)*"
+  );
   lines.push("");
 
-  if (regulationNote) {
+  if (regulationBin) {
     lines.push("---");
     lines.push("");
-    lines.push(`*regulation / 출처: ${escMdCell(regulationNote)}*`);
+    lines.push(
+      `*등록된 regulation.bin: \`${escMdCell(regulationBin.name)}\` (${formatFileSize(regulationBin.size)}) — 브라우저에서는 내용을 해석하지 않으며 출처 기록용입니다.*`
+    );
   }
 
   return lines.join("\n");
@@ -432,20 +429,6 @@ async function fileToDataUrl(file, maxBytes) {
   });
 }
 
-function summarizeTae(tae) {
-  if (!tae || typeof tae !== "object") return "";
-  const anims = tae.animations;
-  if (!Array.isArray(anims) || !anims.length) {
-    return "*(TAE JSON에 animations[]가 없습니다.)*";
-  }
-  const parts = [];
-  for (const a of anims) {
-    const ev = Array.isArray(a.events) ? a.events : [];
-    parts.push(`- **${a.name || "(이름 없음)"}** — 이벤트 ${ev.length}개`);
-  }
-  return parts.join("\n");
-}
-
 async function generate() {
   if (typeof Papa === "undefined") {
     throw new Error("PapaParse 로드 실패 — 네트워크를 확인하세요.");
@@ -459,7 +442,7 @@ async function generate() {
   const npcFile = document.getElementById("file-npc").files[0];
   const atkFile = document.getElementById("file-atk").files[0];
   const imgFile = document.getElementById("file-img").files[0];
-  const taeFile = document.getElementById("file-tae").files[0];
+  const regulationBinFile = document.getElementById("file-regulation-bin").files[0];
   const anibndFile = document.getElementById("file-anibnd").files[0];
   const chrbndFile = document.getElementById("file-chrbnd").files[0];
 
@@ -467,20 +450,15 @@ async function generate() {
   const titleEn = document.getElementById("title-en").value.trim() || "Boss Name (English)";
   const wikiLabel = document.getElementById("wiki-label").value.trim();
   const wikiUrl = document.getElementById("wiki-url").value.trim();
-  const npcKey = document.getElementById("npc-key").value.trim();
-  const npcEx = document.getElementById("npc-exclude").value.trim();
-  const atkKey = document.getElementById("atk-key").value.trim() || "[Tree Sentinel]";
-  const atkEx = document.getElementById("atk-exclude").value.trim();
-  const regNote = document.getElementById("reg-note").value.trim();
 
   let npcHeaders = [];
   let npcRow = null;
-  if (npcFile && npcKey) {
+  if (npcFile && npcFile.size) {
     const t = await npcFile.text();
     const parsed = Papa.parse(t, { header: true, skipEmptyLines: true });
     if (parsed.errors?.length) throw new Error(parsed.errors[0].message);
     npcHeaders = parsed.meta.fields || [];
-    npcRow = pickFirstNpcRow(parsed.data, npcHeaders, npcKey, npcEx || null);
+    npcRow = pickFirstNpcRow(parsed.data, npcHeaders, "", null);
   }
 
   if (!atkFile) throw new Error("AtkParam_Npc CSV는 필수입니다.");
@@ -489,7 +467,7 @@ async function generate() {
   const atkParsed = Papa.parse(atkText, { header: true, skipEmptyLines: true });
   if (atkParsed.errors?.length) throw new Error(atkParsed.errors[0].message);
   const atkHeaders = atkParsed.meta.fields || [];
-  const atkRows = loadAtkRows(atkParsed.data, atkHeaders, atkKey, atkEx || null);
+  const atkRows = loadAtkRows(atkParsed.data, atkHeaders, "", null);
 
   let imageMdLine = "";
   previewImg.innerHTML = "";
@@ -509,11 +487,12 @@ async function generate() {
     }
   }
 
-  let taeNote = "";
-  if (taeFile && taeFile.size) {
-    const raw = await taeFile.text();
-    const tae = JSON.parse(raw);
-    taeNote = summarizeTae(tae);
+  let regulationBin = null;
+  if (regulationBinFile && regulationBinFile.size) {
+    regulationBin = {
+      name: regulationBinFile.name,
+      size: regulationBinFile.size,
+    };
   }
 
   const bundleEntries = [];
@@ -546,17 +525,19 @@ async function generate() {
     atkHeaders,
     imageMdLine,
     bundleSection,
-    taeNote,
-    regulationNote: regNote,
+    regulationBin,
   });
 
   out.value = md;
   let msg = `완료 — 스킬 행 ${atkRows.length}개`;
-  if (npcFile && npcKey) {
-    msg += npcRow ? ", NpcParam 1행" : " · NpcParam에서 행 없음(필터·파일 확인)";
+  if (npcFile && npcFile.size) {
+    msg += npcRow ? ", NpcParam 첫 행" : " · NpcParam에서 데이터 행 없음";
   }
   if (bundleEntries.length) {
     msg += `, 번들 ${bundleEntries.length}개 기록`;
+  }
+  if (regulationBin) {
+    msg += ", regulation.bin 출처 기록";
   }
   status.textContent = msg;
 }

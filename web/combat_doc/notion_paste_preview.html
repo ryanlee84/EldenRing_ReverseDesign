@@ -49,12 +49,13 @@
   <header class="notion-page">
     <h1>노션 붙여넣기 미리보기</h1>
     <p class="sub">
-      <strong>NpcParam.csv</strong>(선택) + <strong>AtkParam_Npc.csv</strong>(필수)와 선택 파일을 올리면,
+      <strong>NpcParam.csv</strong>(선택, 첫 행만 요약에 사용) + <strong>AtkParam_Npc.csv</strong>(필수, 포함된 행 전부 표시)와 선택 파일을 올리면,
       <code>NotionDoc.md</code> §2와 같은 순서의 <strong>Markdown</strong>을 만듭니다.
-      <strong><code>*.anibnd.dcx</code> / <code>*.chrbnd.dcx</code></strong>는
-      GitHub Pages에서는 <strong>파싱하지 않고</strong> 파일명·용량·chr 힌트만 Markdown에 기록합니다
+      <strong><code>*.anibnd.dcx</code> / <code>*.chrbnd.dcx</code></strong>와
+      <strong><code>regulation.bin</code></strong>은
+      GitHub Pages에서는 <strong>파싱하지 않고</strong> 파일명·용량·(번들의 경우) chr 힌트만 Markdown에 기록합니다
       (역공학 원리: <code>docs/reverse_engineering_combat_sheet.md</code>).
-      프레임 타임라인은 별도로 추출한 <strong>TAE JSON</strong>을 함께 올리면 아래 「프레임 분석」절이 채워집니다.
+      Param CSV와 짝을 이루는 <strong>regulation.bin</strong>을 올리면 아래 출처 절에 함께 남깁니다.
       아래 상자 전체를 복사해 노션에 붙여넣기 하면 표·제목이 그대로 들어갑니다.
       (이미지는 용량 제한 내이면 Data URL로 포함되며, 크면 파일명 안내만 넣습니다.)
     </p>
@@ -71,17 +72,17 @@
     <form id="paste-form" onsubmit="return false;">
       <fieldset>
         <legend>파일</legend>
-        <label>AtkParam_Npc.csv <strong>(필수)</strong>
+        <label>AtkParam_Npc.csv <strong>(필수)</strong> — CSV에 들어 있는 행 전부가 스킬 표에 들어갑니다.
           <input type="file" id="file-atk" accept=".csv,text/csv" required />
         </label>
-        <label>NpcParam.csv (선택 — 경감·내성·요약 일부 자동)
+        <label>NpcParam.csv (선택 — CSV의 <strong>첫 데이터 행</strong>으로 경감·내성·요약 자동)
           <input type="file" id="file-npc" accept=".csv,text/csv" />
         </label>
         <label>표지 이미지 (선택, ~1.5MB 이하 권장)
           <input type="file" id="file-img" accept="image/*" />
         </label>
-        <label>TAE JSON (선택 — 프레임 절에 애니 요약)
-          <input type="file" id="file-tae" accept=".json,application/json" />
+        <label><code>regulation.bin</code> (선택 — Param 정본 출처, 파일명·용량만 기록)
+          <input type="file" id="file-regulation-bin" accept=".bin,application/octet-stream" />
         </label>
       </fieldset>
 
@@ -111,27 +112,6 @@
           <label>URL <input type="text" id="wiki-url" style="width:100%;max-width:100%" placeholder="https://eldenring.wiki.fextralife.com/..." /></label>
         </fieldset>
       </div>
-
-      <div class="grid-2">
-        <fieldset>
-          <legend>NpcParam 행 필터</legend>
-          <p class="field-hint"><code>rowname</code> 부분 일치. 비우면 NpcParam 표는 생략됩니다.</p>
-          <label>포함 문자열 <input type="text" id="npc-key" placeholder="[Margit]" /></label>
-          <label>제외 문자열 <input type="text" id="npc-exclude" placeholder="" /></label>
-        </fieldset>
-        <fieldset>
-          <legend>AtkParam 행 필터</legend>
-          <label>포함 문자열 (rowname) <input type="text" id="atk-key" value="[Tree Sentinel]" /></label>
-          <label>제외 문자열 <input type="text" id="atk-exclude" value="Draconic" /></label>
-        </fieldset>
-      </div>
-
-      <fieldset>
-        <legend>메모</legend>
-        <label>regulation / 패치 메모 (선택, Markdown 하단)
-          <input type="text" id="reg-note" style="width:100%;max-width:100%" placeholder="regulation v1.10 · NpcParam.csv 2024-xx" />
-        </label>
-      </fieldset>
 
       <button type="button" id="btn-gen">Markdown 생성</button>
     </form>

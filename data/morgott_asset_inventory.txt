@@ -1,0 +1,5 @@
+# Morgott(c2130) — 게임/프로젝트 chr 트리 기준 힌트. 번들을 연 뒤 내부 .tae 등 실제 이름을 추가하세요.
+chr/c2130.anibnd.dcx
+chr/c2130.chrbnd.dcx
+# chr/c2131.anibnd.dcx
+# chr/c2131.chrbnd.dcx

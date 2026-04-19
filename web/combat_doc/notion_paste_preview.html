@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>노션 붙여넣기 미리보기 — 보스 역기획</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" crossorigin="anonymous"></script>
+  <style>
+    .notion-page { max-width: 52rem; }
+    textarea#notion-md {
+      width: 100%;
+      min-height: 28rem;
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      background: #252a33;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      resize: vertical;
+    }
+    #cover-preview {
+      margin: 0.75rem 0;
+      max-height: 220px;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    #cover-preview img {
+      max-width: 100%;
+      max-height: 220px;
+      object-fit: contain;
+      display: block;
+      background: #111;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    @media (max-width: 720px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="notion-page">
+    <h1>노션 붙여넣기 미리보기</h1>
+    <p class="sub">
+      <strong>NpcParam.csv</strong>(선택) + <strong>AtkParam_Npc.csv</strong>(필수)와 선택 파일을 올리면,
+      <code>NotionDoc.md</code> §2와 같은 순서의 <strong>Markdown</strong>을 만듭니다.
+      아래 상자 전체를 복사해 노션 페이지에 붙여넣기 하면 표·제목이 그대로 들어갑니다.
+      (이미지는 용량 제한 내이면 Data URL로 포함되며, 크면 파일명 안내만 넣습니다.)
+    </p>
+    <p class="sub hint">
+      <a href="./index.html">전투 문서화(AtkParam)</a>
+      ·
+      양식: 저장소 루트 <code>NotionDoc.md</code>
+      ·
+      열 매핑: <code>docs/combat_doc_notion_field_mapping.md</code>
+    </p>
+  </header>
+
+  <main class="notion-page">
+    <form id="paste-form" onsubmit="return false;">
+      <fieldset>
+        <legend>파일</legend>
+        <label>AtkParam_Npc.csv <strong>(필수)</strong>
+          <input type="file" id="file-atk" accept=".csv,text/csv" required />
+        </label>
+        <label>NpcParam.csv (선택 — 경감·내성·요약 일부 자동)
+          <input type="file" id="file-npc" accept=".csv,text/csv" />
+        </label>
+        <label>표지 이미지 (선택, ~1.5MB 이하 권장)
+          <input type="file" id="file-img" accept="image/*" />
+        </label>
+        <label>TAE JSON (선택 — 프레임 절에 애니 요약)
+          <input type="file" id="file-tae" accept=".json,application/json" />
+        </label>
+      </fieldset>
+
+      <div class="grid-2">
+        <fieldset>
+          <legend>문서 제목</legend>
+          <label>한글 제목 (H1) <input type="text" id="title-ko" placeholder="끔찍한 흉조 멀기트" /></label>
+          <label>영문 한 줄 <input type="text" id="title-en" placeholder="Margit, the Fell Omen" /></label>
+        </fieldset>
+        <fieldset>
+          <legend>위키 링크 (요약 표)</legend>
+          <label>링크에 보일 이름 <input type="text" id="wiki-label" placeholder="폭풍의 언덕" /></label>
+          <label>URL <input type="text" id="wiki-url" style="width:100%;max-width:100%" placeholder="https://eldenring.wiki.fextralife.com/..." /></label>
+        </fieldset>
+      </div>
+
+      <div class="grid-2">
+        <fieldset>
+          <legend>NpcParam 행 필터</legend>
+          <p class="field-hint"><code>rowname</code> 부분 일치. 비우면 NpcParam 표는 생략됩니다.</p>
+          <label>포함 문자열 <input type="text" id="npc-key" placeholder="[Margit]" /></label>
+          <label>제외 문자열 <input type="text" id="npc-exclude" placeholder="" /></label>
+        </fieldset>
+        <fieldset>
+          <legend>AtkParam 행 필터</legend>
+          <label>포함 문자열 (rowname) <input type="text" id="atk-key" value="[Tree Sentinel]" /></label>
+          <label>제외 문자열 <input type="text" id="atk-exclude" value="Draconic" /></label>
+        </fieldset>
+      </div>
+
+      <fieldset>
+        <legend>메모</legend>
+        <label>regulation / 패치 메모 (선택, Markdown 하단)
+          <input type="text" id="reg-note" style="width:100%;max-width:100%" placeholder="regulation v1.10 · NpcParam.csv 2024-xx" />
+        </label>
+      </fieldset>
+
+      <button type="button" id="btn-gen">Markdown 생성</button>
+    </form>
+
+    <p id="status" class="status" aria-live="polite"></p>
+
+    <div id="cover-preview" class="hidden" aria-label="표지 미리보기"></div>
+
+    <section>
+      <h2>노션용 Markdown</h2>
+      <p class="field-hint">전체 선택(Ctrl+A) 후 복사하거나, 버튼을 사용하세요.</p>
+      <div class="toolbar">
+        <button type="button" id="btn-copy">클립보드에 복사</button>
+        <button type="button" id="btn-dl">.md 다운로드</button>
+      </div>
+      <textarea id="notion-md" spellcheck="false" placeholder="위에서 «Markdown 생성»을 누르면 여기에 채워집니다."></textarea>
+    </section>
+  </main>
+
+  <script src="./notion_paste_preview.js"></script>
+</body>
+</html>

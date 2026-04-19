@@ -77,6 +77,22 @@ def style_css() -> FileResponse:
     return FileResponse(WEB / "style.css", media_type="text/css; charset=utf-8")
 
 
+@app.get("/notion_paste_preview.html", response_class=HTMLResponse)
+def notion_paste_preview_html() -> str:
+    p = WEB / "notion_paste_preview.html"
+    if not p.is_file():
+        raise HTTPException(404, "notion_paste_preview.html 없음")
+    return p.read_text(encoding="utf-8")
+
+
+@app.get("/notion_paste_preview.js")
+def notion_paste_preview_js() -> FileResponse:
+    return FileResponse(
+        WEB / "notion_paste_preview.js",
+        media_type="application/javascript; charset=utf-8",
+    )
+
+
 @app.post("/api/document")
 async def api_document(
     atkparam: UploadFile = File(..., description="AtkParam_Npc CSV"),

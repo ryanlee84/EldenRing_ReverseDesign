@@ -88,6 +88,44 @@ function escMdCell(s) {
     .replace(/\r?\n/g, " ");
 }
 
+function formatFileSize(bytes) {
+  const n = Number(bytes) || 0;
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  return `${(n / 1024 / 1024).toFixed(2)} MB`;
+}
+
+/** 파일명에서 c3251 / 3251 형태 chr 힌트 */
+function chrHintFromFilename(name) {
+  const m = /(?:^|[^\d])(c?)(\d{4})\b/i.exec(String(name || ""));
+  if (!m) return "";
+  const num = m[2];
+  return m[1].toLowerCase() === "c" ? `c${num}` : num;
+}
+
+/**
+ * @param {{ kind: string, name: string, size: number, chrHint: string }[]} entries
+ * @returns {string}
+ */
+function buildBundleMarkdownSection(entries) {
+  if (!entries || !entries.length) return "";
+  const lines = [];
+  lines.push("### 번들 등록 (자산)");
+  lines.push("");
+  lines.push(
+    "*(브라우저는 `anibnd`/`chrbnd`를 열지 않습니다. Smithbox·DS Anim Studio 등으로 TAE를 뽑은 뒤 위 폼의 TAE JSON을 합치면 `docs/reverse_engineering_combat_sheet.md` 2단계와 연결됩니다.)*"
+  );
+  lines.push("");
+  for (const e of entries) {
+    const hint = e.chrHint ? ` — \`${e.chrHint}\`` : "";
+    lines.push(
+      `- **${escMdCell(e.kind)}** \`${escMdCell(e.name)}\` — ${formatFileSize(e.size)}${hint}`
+    );
+  }
+  lines.push("");
+  return lines.join("\n");
+}
+
 function loadAtkRows(allRows, headers, include, exclude) {
   const nameKey =
     findHeader(headers, ["rowname", "Row Name", "Name"]) || "rowname";
@@ -167,6 +205,7 @@ function buildNotionMarkdown(opts) {
     atkRows,
     atkHeaders,
     imageMdLine,
+    bundleSection,
     taeNote,
     regulationNote,
   } = opts;
@@ -358,13 +397,17 @@ function buildNotionMarkdown(opts) {
   }
   lines.push("");
 
+  if (bundleSection) {
+    lines.push(bundleSection);
+  }
+
   lines.push("### **프레임 분석**");
   lines.push("");
   if (taeNote) {
     lines.push(taeNote);
   } else {
     lines.push(
-      "[*(TAE JSON을 올리면 여기에 애니 요약이 붙습니다. 별도 노션 하위 페이지 링크로 바꿔도 됩니다.)*](#)"
+      "[*(TAE JSON을 올리면 여기에 애니 요약이 붙습니다. `anibnd`만 등록된 경우에도 JSON 추출 전까지는 이 안내가 표시됩니다.)*](#)"
     );
   }
   lines.push("");
@@ -417,6 +460,8 @@ async function generate() {
   const atkFile = document.getElementById("file-atk").files[0];
   const imgFile = document.getElementById("file-img").files[0];
   const taeFile = document.getElementById("file-tae").files[0];
+  const anibndFile = document.getElementById("file-anibnd").files[0];
+  const chrbndFile = document.getElementById("file-chrbnd").files[0];
 
   const titleKo = document.getElementById("title-ko").value.trim() || "보스 이름 (한글)";
   const titleEn = document.getElementById("title-en").value.trim() || "Boss Name (English)";
@@ -471,6 +516,25 @@ async function generate() {
     taeNote = summarizeTae(tae);
   }
 
+  const bundleEntries = [];
+  if (anibndFile && anibndFile.size) {
+    bundleEntries.push({
+      kind: "anibnd",
+      name: anibndFile.name,
+      size: anibndFile.size,
+      chrHint: chrHintFromFilename(anibndFile.name),
+    });
+  }
+  if (chrbndFile && chrbndFile.size) {
+    bundleEntries.push({
+      kind: "chrbnd",
+      name: chrbndFile.name,
+      size: chrbndFile.size,
+      chrHint: chrHintFromFilename(chrbndFile.name),
+    });
+  }
+  const bundleSection = buildBundleMarkdownSection(bundleEntries);
+
   const md = buildNotionMarkdown({
     titleKo,
     titleEn,
@@ -481,6 +545,7 @@ async function generate() {
     atkRows,
     atkHeaders,
     imageMdLine,
+    bundleSection,
     taeNote,
     regulationNote: regNote,
   });
@@ -489,6 +554,9 @@ async function generate() {
   let msg = `완료 — 스킬 행 ${atkRows.length}개`;
   if (npcFile && npcKey) {
     msg += npcRow ? ", NpcParam 1행" : " · NpcParam에서 행 없음(필터·파일 확인)";
+  }
+  if (bundleEntries.length) {
+    msg += `, 번들 ${bundleEntries.length}개 기록`;
   }
   status.textContent = msg;
 }

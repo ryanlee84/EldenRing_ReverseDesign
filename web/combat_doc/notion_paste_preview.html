@@ -51,7 +51,11 @@
     <p class="sub">
       <strong>NpcParam.csv</strong>(선택) + <strong>AtkParam_Npc.csv</strong>(필수)와 선택 파일을 올리면,
       <code>NotionDoc.md</code> §2와 같은 순서의 <strong>Markdown</strong>을 만듭니다.
-      아래 상자 전체를 복사해 노션 페이지에 붙여넣기 하면 표·제목이 그대로 들어갑니다.
+      <strong><code>*.anibnd.dcx</code> / <code>*.chrbnd.dcx</code></strong>는
+      GitHub Pages에서는 <strong>파싱하지 않고</strong> 파일명·용량·chr 힌트만 Markdown에 기록합니다
+      (역공학 원리: <code>docs/reverse_engineering_combat_sheet.md</code>).
+      프레임 타임라인은 별도로 추출한 <strong>TAE JSON</strong>을 함께 올리면 아래 「프레임 분석」절이 채워집니다.
+      아래 상자 전체를 복사해 노션에 붙여넣기 하면 표·제목이 그대로 들어갑니다.
       (이미지는 용량 제한 내이면 Data URL로 포함되며, 크면 파일명 안내만 넣습니다.)
     </p>
     <p class="sub hint">
@@ -78,6 +82,20 @@
         </label>
         <label>TAE JSON (선택 — 프레임 절에 애니 요약)
           <input type="file" id="file-tae" accept=".json,application/json" />
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>번들 (선택 — 문서에 경로·용량만 기록)</legend>
+        <p class="field-hint">
+          브라우저는 DCX/BND를 열지 않습니다. 노션·기획서에 「어떤 자산을 기준으로 했는지」만 남길 때 사용하세요.
+          로컬에서 <code>python tools/combat_doc_server.py</code> 를 쓰면 같은 폴더의 UI를 띄울 수 있습니다.
+        </p>
+        <label><code>*.anibnd.dcx</code> (애니·TAE 원천)
+          <input type="file" id="file-anibnd" accept=".dcx,.DCX,.anibnd,application/octet-stream" />
+        </label>
+        <label><code>*.chrbnd.dcx</code> (캐릭터 리소스)
+          <input type="file" id="file-chrbnd" accept=".dcx,.DCX,.chrbnd,application/octet-stream" />
         </label>
       </fieldset>
 

@@ -10,7 +10,6 @@
 
 from __future__ import annotations
 
-import json
 import re
 import sys
 import tempfile
@@ -96,12 +95,11 @@ def notion_paste_preview_js() -> FileResponse:
 @app.post("/api/document")
 async def api_document(
     atkparam: UploadFile = File(..., description="AtkParam_Npc CSV"),
-    boss_key: str = Form("[Tree Sentinel]"),
-    exclude: str = Form("Draconic"),
+    boss_key: str = Form(""),
+    exclude: str = Form(""),
     title: str = Form("Boss"),
     asset_dir: str = Form(""),
     chr_glob: str = Form(r"c3251.*"),
-    tae_json: UploadFile | None = File(None),
 ) -> JSONResponse:
     if not atkparam.filename or not atkparam.filename.lower().endswith(".csv"):
         raise HTTPException(400, "atkparam CSV 파일을 올려 주세요.")
@@ -118,25 +116,17 @@ async def api_document(
     finally:
         tmp_path.unlink(missing_ok=True)
 
-    tae_extra: dict | None = None
-    if tae_json and tae_json.filename:
-        raw = await tae_json.read()
-        try:
-            tae_extra = json.loads(raw.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as err:
-            raise HTTPException(400, f"TAE JSON 파싱 실패: {err}") from err
-
     inv = _inventory(asset_dir, chr_glob)
     meta = {
         "title": title.strip() or "Boss",
         "generated": datetime.now(timezone.utc).isoformat(),
         "csv_path": atkparam.filename,
-        "include_key": boss_key,
+        "include_key": boss_key.strip(),
         "exclude_substr": ex or "",
         "asset_inventory": inv,
     }
-    md = cde.render_markdown(meta, attacks, inv, tae_extra)
-    payload = cde.build_json_payload(meta, attacks, tae_extra)
+    md = cde.render_markdown(meta, attacks, inv, None)
+    payload = cde.build_json_payload(meta, attacks, None)
     return JSONResponse(
         {
             "ok": True,

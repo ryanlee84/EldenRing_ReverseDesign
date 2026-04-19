@@ -12,7 +12,7 @@
   <header>
     <h1>전투 문서화</h1>
     <p class="sub">
-      <strong>AtkParam_Npc CSV</strong>를 올리면 표·JSON·Markdown·xlsx를 만듭니다.
+      <strong>AtkParam_Npc CSV</strong>를 올리면 파일에 포함된 <strong>모든 행</strong>으로 표·JSON·Markdown·xlsx를 만듭니다.
       <code>.anibnd</code>는 브라우저에서 해석하지 않습니다.
       <strong>GitHub Pages</strong>에서는 브라우저만 동작합니다(자산 폴더 경로·로컬 API 없음).
       로컬에서 <code>python tools/combat_doc_server.py</code> 를 띄우면 같은 화면에서 API로 자산 인벤토리까지 붙일 수 있습니다.
@@ -40,10 +40,8 @@
         <label><input type="file" name="atkparam" accept=".csv,text/csv" required /></label>
       </fieldset>
       <fieldset>
-        <legend>필터</legend>
-        <label>포함 문자열 (rowname) <input type="text" name="boss_key" value="[Tree Sentinel]" /></label>
-        <label>제외 문자열 <input type="text" name="exclude" value="Draconic" /></label>
-        <label>문서 제목 <input type="text" name="title" value="Tree Sentinel" /></label>
+        <legend>문서 제목</legend>
+        <label><input type="text" name="title" value="Tree Sentinel" placeholder="예: Tree Sentinel" /></label>
       </fieldset>
       <fieldset id="fieldset-asset">
         <legend>자산 인벤토리 (선택, 로컬 서버 전용)</legend>
@@ -52,14 +50,6 @@
           <input type="text" name="asset_dir" placeholder="C:\Users\...\Smithbox_Tree\chr" style="width:100%;max-width:40rem" />
         </label>
         <label>파일명 정규식 <input type="text" name="chr_glob" value="c3251.*" /></label>
-      </fieldset>
-      <fieldset>
-        <legend>TAE JSON (선택)</legend>
-        <p class="field-hint">
-          <code>animations[]</code>·<code>events[]</code>의 <code>frameStart</code>/<code>frameEnd</code>/<code>kind</code>가 있으면 미리보기에 막대 타임라인(SVG)이 표시됩니다. 형식 예:
-          <code>data/tree_sentinel_tae.example.json</code>
-        </p>
-        <label><input type="file" name="tae_json" accept=".json,application/json" /></label>
       </fieldset>
       <button type="submit" id="btn-submit">문서화</button>
     </form>
@@ -74,7 +64,6 @@
         <button type="button" id="dl-csv">CSV 다운로드</button>
         <button type="button" id="dl-xlsx">Excel (.xlsx) 다운로드</button>
       </div>
-      <div id="tae-timeline-wrap" class="hidden" aria-label="TAE 타임라인 미리보기"></div>
       <div id="table-wrap"></div>
       <details>
         <summary>Markdown 원문</summary>

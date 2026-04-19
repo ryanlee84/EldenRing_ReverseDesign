@@ -142,9 +142,14 @@ def render_markdown(
     lines.append("")
     lines.append(f"- 생성: `{meta.get('generated', '')}`")
     lines.append(f"- 소스 CSV: `{meta.get('csv_path', '')}`")
-    lines.append(f"- 필터: 포함 `{meta.get('include_key', '')}`")
-    if meta.get("exclude_substr"):
-        lines.append(f"- 제외: `{meta['exclude_substr']}`")
+    inc = (meta.get("include_key") or "").strip()
+    exc = (meta.get("exclude_substr") or "").strip()
+    if inc or exc:
+        lines.append(f"- 필터: 포함 `{inc}`")
+        if exc:
+            lines.append(f"- 제외: `{exc}`")
+    else:
+        lines.append("- 추출: CSV의 모든 데이터 행 (필터 없음)")
     lines.append("")
 
     if inventory:
@@ -178,13 +183,6 @@ def render_markdown(
         lines.append("```json")
         lines.append(json.dumps(tae_extra, ensure_ascii=False, indent=2))
         lines.append("```")
-        lines.append("")
-    else:
-        lines.append("## TAE (프레임·이벤트)")
-        lines.append("")
-        lines.append(
-            "*(비어 있음. 별도 도구로 덤프한 JSON을 `--merge-tae` 로 넘기면 이 절이 채워짐.)*"
-        )
         lines.append("")
 
     return "\n".join(lines)

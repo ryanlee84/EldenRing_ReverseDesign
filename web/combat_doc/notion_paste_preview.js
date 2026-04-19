@@ -352,7 +352,7 @@ function buildNotionMarkdown(opts) {
   } else {
     lines.push("### 경감률");
     lines.push("");
-    lines.push("*(NpcParam CSV를 올리고 행 필터를 맞추면 자동 채워집니다.)*");
+    lines.push("*(NpcParam CSV를 올리면 첫 데이터 행으로 자동 채워집니다.)*");
     lines.push("");
     lines.push("### 내성치 (1주차 기준)");
     lines.push("");

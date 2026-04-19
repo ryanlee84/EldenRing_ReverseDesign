@@ -22,9 +22,12 @@
    - 본페 보스: **`c2130.anibnd.dcx`**, **`c2130.chrbnd.dcx`** 가 대표적이다.  
    - 변형(사망 모델 등): **`c2131`** 등 별도 번들이 있을 수 있으니 필요 시 같이 연다.
 5. **`c2130.anibnd.dcx`** 를 선택한 뒤, UI에서 **번들 내용(Contents / 내부 파일 트리)** 을 펼친다.
-6. 내부에 보이는 **`*.tae`**, **`*.hkx`**(애니), 기타 항목을 메모하거나, **Extract / Export** 메뉴로 지정 폴더에 저장한다.  
-   - 정확한 메뉴 이름은 Smithbox 버전에 따른다. 보통 **우클릭 컨텍스트 메뉴** 또는 **상단/측면 툴바의 Extract** 계열이다.
-7. 같은 방식으로 **`c2130.chrbnd.dcx`** 를 열어 **FLVER·텍스처 경로** 등을 확인한다. (역기획 문서의 “자산 인벤토리”용)
+6. 가운데 **내부 파일 목록**에서 `*.tae` 등을 한 줄 선택한다.  
+7. 같은 패널 하단 **Actions** 에서 출력 경로(예: `C:\Users\ryanlee\Documents\Smithbox_Tree`)를 확인한 뒤:  
+   - **「Extract Selected Internal File」** — 지금 선택한 내부 파일(예: `tae\c3251.tae` / Morgott면 `tae\c2130.tae`)만 지정 폴더로 저장  
+   - **「Extract Main File」** — `*.anibnd.dcx` 번들 파일 통째로 저장  
+   (Smithbox **2.1.2** File Browser 가운데 열 화면과 동일.)
+8. 같은 방식으로 **`c2130.chrbnd.dcx`** 를 열어 **FLVER·텍스처 경로** 등을 확인·추출한다. (역기획 문서의 “자산 인벤토리”용)
 
 ---
 

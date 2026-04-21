@@ -1,77 +1,192 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>전투 문서화 — AtkParam</title>
-  <link rel="stylesheet" href="./style.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UE5 히트박스 JSON 변환기</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f5f7;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        input[type="text"], input[type="number"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        button {
+            width: 100%;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>전투 문서화</h1>
-    <p class="sub">
-      <strong>AtkParam_Npc CSV</strong>를 올리면 파일에 포함된 <strong>모든 행</strong>으로 표·JSON·Markdown·xlsx를 만듭니다.
-      <code>.anibnd</code>는 브라우저에서 해석하지 않습니다.
-      <strong>GitHub Pages</strong>에서는 브라우저만 동작합니다(자산 폴더 경로·로컬 API 없음).
-      로컬에서 <code>python tools/combat_doc_server.py</code> 를 띄우면 같은 화면에서 API로 자산 인벤토리까지 붙일 수 있습니다.
-    </p>
-    <p class="sub hint">
-      Pages 주소 예:
-      <code>https://&lt;계정&gt;.github.io/&lt;저장소&gt;/combat-doc/</code>
-    </p>
-    <p class="sub hint">
-      적 레퍼런스 가이드(복잡도 단계·카드 UI):
-      <a href="./enemy_guide_editor.html">편집</a>
-      ·
-      <a href="./enemy_guide_view.html">보기</a>
-      ·
-      <a href="./reverse_design_phases.html">역기획 파이프라인(B형·Phase)</a>
-      ·
-      <a href="./notion_paste_preview.html">노션 붙여넣기 미리보기</a>
-    </p>
-  </header>
 
-  <main>
-    <form id="doc-form">
-      <fieldset>
-        <legend>CSV (필수)</legend>
-        <label><input type="file" name="atkparam" accept=".csv,text/csv" required /></label>
-      </fieldset>
-      <fieldset>
-        <legend>문서 제목</legend>
-        <label><input type="text" name="title" value="Tree Sentinel" placeholder="예: Tree Sentinel" /></label>
-      </fieldset>
-      <fieldset id="fieldset-asset">
-        <legend>자산 인벤토리 (선택, 로컬 서버 전용)</legend>
-        <p class="field-hint">FastAPI 서버가 있을 때만 적용됩니다. Pages에서는 무시됩니다.</p>
-        <label>폴더 경로
-          <input type="text" name="asset_dir" placeholder="C:\Users\...\Smithbox_Tree\chr" style="width:100%;max-width:40rem" />
-        </label>
-        <label>파일명 정규식 <input type="text" name="chr_glob" value="c3251.*" /></label>
-      </fieldset>
-      <button type="submit" id="btn-submit">문서화</button>
-    </form>
+<div class="container">
+    <h2>⚔️ 스미스박스 ➡️ JSON 변환기</h2>
+    
+    <div class="form-group">
+        <label>1. AtkParam_Npc.csv 업로드</label>
+        <input type="file" id="csvFileInput" accept=".csv">
+    </div>
 
-    <p id="status" class="status" aria-live="polite"></p>
+    <div class="grid-2 form-group">
+        <div>
+            <label>공격 ID (예: 4160000)</label>
+            <input type="number" id="atkId" placeholder="4160000">
+        </div>
+        <div>
+            <label>애니 이름 (예: a00_3000)</label>
+            <input type="text" id="animName" placeholder="a00_3000">
+        </div>
+    </div>
 
-    <section id="result" class="hidden">
-      <h2>미리보기</h2>
-      <div class="toolbar">
-        <button type="button" id="dl-md">Markdown 다운로드</button>
-        <button type="button" id="dl-json">JSON 다운로드</button>
-        <button type="button" id="dl-csv">CSV 다운로드</button>
-        <button type="button" id="dl-xlsx">Excel (.xlsx) 다운로드</button>
-      </div>
-      <div id="table-wrap"></div>
-      <details>
-        <summary>Markdown 원문</summary>
-        <pre id="md-raw"></pre>
-      </details>
-    </section>
-  </main>
+    <div class="grid-3 form-group">
+        <div>
+            <label>총 프레임</label>
+            <input type="number" id="totalFrames" placeholder="90">
+        </div>
+        <div>
+            <label>판정 시작</label>
+            <input type="number" id="startFrame" placeholder="28">
+        </div>
+        <div>
+            <label>판정 종료</label>
+            <input type="number" id="endFrame" placeholder="33">
+        </div>
+    </div>
 
-  <script src="./app.js"></script>
+    <button onclick="generateJSON()">UE5용 JSON 다운로드</button>
+</div>
+
+<script>
+function generateJSON() {
+    const fileInput = document.getElementById('csvFileInput').files[0];
+    const atkId = document.getElementById('atkId').value;
+    const animName = document.getElementById('animName').value;
+    const totalFrames = parseInt(document.getElementById('totalFrames').value);
+    const startFrame = parseInt(document.getElementById('startFrame').value);
+    const endFrame = parseInt(document.getElementById('endFrame').value);
+
+    if (!fileInput || !atkId || !animName || isNaN(totalFrames) || isNaN(startFrame) || isNaN(endFrame)) {
+        alert("모든 빈칸을 채우고 CSV 파일을 업로드해 주세요!");
+        return;
+    }
+
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        const text = e.target.result;
+        const lines = text.split('\n');
+        
+        const headers = lines[0].split(';'); 
+        const separator = headers.length > 1 ? ';' : ','; 
+        const actualHeaders = lines[0].split(separator);
+        
+        const idIndex = actualHeaders.findIndex(h => h.trim() === 'Row ID' || h.trim() === 'ID');
+        const radiusIndex = actualHeaders.findIndex(h => h.trim() === 'hit0_Radius');
+        const polyIndex = actualHeaders.findIndex(h => h.trim() === 'hit0_DummyPoly1');
+        const poiseIndex = actualHeaders.findIndex(h => h.trim() === 'poiseDamage' || h.trim() === 'staminaAttack');
+
+        let targetRow = null;
+
+        for (let i = 1; i < lines.length; i++) {
+            const columns = lines[i].split(separator);
+            if (columns[idIndex] && columns[idIndex].trim() === atkId) {
+                targetRow = columns;
+                break;
+            }
+        }
+
+        if (!targetRow) {
+            alert("입력하신 ID(" + atkId + ")를 CSV에서 찾을 수 없습니다.");
+            return;
+        }
+
+        const resultJSON = {
+            "animation_name": animName,
+            "total_frames": totalFrames,
+            "hitboxes": [
+                {
+                    "start_frame": startFrame,
+                    "end_frame": endFrame,
+                    "bone_id": targetRow[polyIndex] ? parseInt(targetRow[polyIndex]) : 0,
+                    "radius": targetRow[radiusIndex] ? parseFloat(targetRow[radiusIndex]) : 0.0,
+                    "poise_damage": targetRow[poiseIndex] ? parseFloat(targetRow[poiseIndex]) : 0.0,
+                    "offset": {"x": 0.0, "y": 0.0, "z": 0.0},
+                    "shape": "Sphere"
+                }
+            ]
+        };
+
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(resultJSON, null, 4));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", animName + "_hitbox.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    };
+
+    reader.readAsText(fileInput);
+}
+</script>
+
 </body>
 </html>
